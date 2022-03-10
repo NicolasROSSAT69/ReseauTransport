@@ -1,16 +1,64 @@
-# This is a sample Python script.
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+def dijkstra(Gare, depart, arriver):
+    assert all(Gare[u][v] >= 0 for u in Gare.keys() for v in Gare[u].keys())
+    gare_precedente = {x: None for x in Gare.keys()}
+    visited = {x: False for x in Gare.keys()}
+    distance = {x: float('inf') for x in Gare.keys()}
+    distance[depart] = 0
+    not_visited = [(0, depart)]
+    while not_visited:
+        dNoeud, station_gare = not_visited.pop()
+        if not visited[station_gare]:
+            visited[station_gare] = True
+            for children in Gare[station_gare].keys():
+                dist_children = dNoeud + Gare[station_gare][children]
+                if dist_children < distance[children]:
+                    distance[children] = dist_children
+                    gare_precedente[children] = station_gare
+                    not_visited.append((dist_children, children))
+        not_visited.sort(reverse=True)
+    tempsTrajet = distance[arriver]
+    trajet = calculer_trajet(depart, arriver, gare_precedente)
+    return trajet, tempsTrajet
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def calculer_trajet(depart, arriver, gare_precedente):
+    trajet = [(arriver)]
+    trajet.insert(0, gare_precedente[arriver])
+    last = gare_precedente[arriver]
+
+    while depart not in trajet:
+        trajet.insert(0, gare_precedente[last])
+        last = gare_precedente[last]
+    return trajet
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    # liste ajacence graphe
+    Gare = {}
+    Gare['Gare de Vaise'] = {'Valmy': 1}
+    Gare['Valmy'] = {'Gare de Vaise': 1, 'Gorge de Loup': 1}
+    Gare['Gorge de Loup'] = {'Valmy': 1, 'Vieux-Lyon': 1}
+    Gare['Vieux-Lyon'] = {'Gorge de Loup': 1, 'Bellecour': 1}
+    Gare['Bellecour'] = {'Vieux-Lyon': 1, 'Cordeliers': 1, 'Guillotière': 1, 'Ampère': 1}
+    Gare['Guillotière'] = {'Bellecour': 1, 'Saxe Gambetta': 1}
+    Gare['Saxe Gambetta'] = {'Guillotière': 1, 'Charpennes': 1}
+    Gare['Cuire'] = {'Hénon': 1}
+    Gare['Hénon'] = {'Cuire': 1, "Croix-Rousse": 1}
+    Gare['Croix-Rousse'] = {'Hénon': 1, "Croix-Paquet": 1}
+    Gare['Croix-Paquet'] = {'Croix-Rousse': 1, "Hôtel de Ville": 1}
+    Gare['Hôtel de Ville'] = {'Croix-Paquet': 1, "Foch": 1, "Cordeliers": 1}
+    Gare['Cordeliers'] = {'Hôtel de Ville': 1, "Bellecour": 1}
+    Gare['Ampère'] = {'Bellecour': 1, "Perrache": 1}
+    Gare['Perrache'] = {'Ampère': 1}
+    Gare['Foch'] = {'Masséna': 1, "Hôtel de Ville": 1}
+    Gare['Masséna'] = {'Foch': 1, "Charpennes": 1}
+    Gare['Charpennes'] = {'Masséna': 1, "Saxe Gambetta": 1}
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    depart = 'Gare de Vaise'
+    arriver = 'Charpennes'
+    trajet, tempsTrajet = dijkstra(Gare, depart, arriver)
+
+    print(trajet)
+    print("Temps du trajet :", tempsTrajet, "minutes")
+
