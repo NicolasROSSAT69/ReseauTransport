@@ -33,6 +33,22 @@ def calculer_trajet(depart, arriver, gare_precedente):
     return trajet
 
 
+def parcours_profondeur(Gare, start, end):
+
+    visited = []
+    visited.append((start, [start]))
+
+    while visited:
+        (node, trajet) = visited.pop()
+        adjacent_nodes = [n for n in Gare[node] if n not in trajet]
+        for a in adjacent_nodes:
+            if a == end:
+                yield trajet + [a]
+            else:
+                visited.append((a, trajet + [a]))
+    return trajet
+
+
 if __name__ == '__main__':
     # liste ajacence graphe
     Gare = {}
@@ -57,8 +73,19 @@ if __name__ == '__main__':
 
     depart = 'Gare de Vaise'
     arriver = 'Charpennes'
-    trajet, tempsTrajet = dijkstra(Gare, depart, arriver)
 
+    #Calcul du trajet avec l'algo de dijkstra
+    print("Itinéraire calculé avec l'algo de Dijkstra : ")
+    trajet, tempsTrajet = dijkstra(Gare, depart, arriver)
     print(trajet)
-    print("Temps du trajet :", tempsTrajet, "minutes")
+    print("Temps du trajet :", tempsTrajet, "minutes \n")
+
+    #Calcul du trajet avec l'algo de parcours en profondeur
+    print("Itinéraire calculé avec l'algo de parcours en profondeur : ")
+    trajet = parcours_profondeur(Gare, depart, arriver)
+    for i in trajet:
+        print(i)
+    #for i in range(len(trajet)):
+        #print(trajet[i])
+
 
