@@ -1,3 +1,6 @@
+import time
+from tkinter import *
+from tkinter import ttk
 
 def dijkstra(Gare, depart, arriver):
     assert all(Gare[u][v] >= 0 for u in Gare.keys() for v in Gare[u].keys())
@@ -48,8 +51,60 @@ def parcours_profondeur(Gare, start, end):
                 visited.append((a, trajet + [a]))
     return trajet
 
+def calculer_itinéraire(Gare):
+
+    l = LabelFrame(fenetre, text="Resultats", padx=20, pady=20)
+    l.pack(fill="both", expand="yes")
+
+    depart = listeDepart.get()
+    arrivee = listearrivee.get()
+
+    # Calcul du trajet avec l'algo de dijkstra
+    startDk = time.time()
+    trajet, tempsTrajet = dijkstra(Gare, depart, arrivee)
+    endDK = time.time()
+    tpsDK = endDK - startDk
+
+    #Affichage resulat parcours en profondeur
+    Label(l, text="----------------------------------------------------------------------------------------------------------------------------").pack()
+    Label(l, text="Resultat du calcul de l'itinéraire par un algo de Dijkstra : ", bg= "green", fg= "white").pack()
+
+    Label(l, text=trajet).pack()
+    Label(l, text="Temps du trajet : " + str(tempsTrajet) + "minutes").pack()
+
+    Label(l, text="Le temps d'execution machine de l'algo de Dijkstra est de : (secondes) " + str(tpsDK)).pack()
+    Label(l, text="Le résultat obtenu est le plus optimisé.").pack()
+    Label(l, text="L'algo retourne l'itinéraire qu'il trouve pour aller du point de départ choisi au point d'arriver.").pack()
+    Label(l, text="Cette itinéraire est calculer en prennant en compte le temps de trajet entre chaque gare").pack()
+    Label(l, text="Le trajet ci-dessus est donc le plus rapide que l'on peut obtenir").pack()
+    Label(l, text="----------------------------------------------------------------------------------------------------------------------------").pack()
+
+    # Calcul du trajet avec l'algo de parcours en profondeur
+    startPP = time.time()
+    trajet = parcours_profondeur(Gare, depart, arrivee)
+    endPP = time.time()
+    tpsPP = endPP - startPP
+
+    #Affichage resulat parcours en profondeur
+    Label(l, text="----------------------------------------------------------------------------------------------------------------------------").pack()
+    Label(l, text="Resultat du calcul de l'itinéraire par un algo de parcours en profondeur : ", bg= "orange", fg= "white").pack()
+
+    compteur = 1
+    for i in trajet:
+        Label(l, text="Itinéraire" + str(compteur) + " : ", bg= "gray51", fg= "white").pack()
+        Label(l, text=i).pack()
+        compteur = compteur + 1
+
+    Label(l, text="Le temps d'execution machine de l'algo de parcours en profondeur est de : (secondes) " + str(tpsPP)).pack()
+    Label(l, text="Le résultat obtenu est loin d'être le plus optimisé.").pack()
+    Label(l, text="L'algo retourne le premier itinéraire qu'il trouve pour aller du point de départ choisi au point d'arriver.").pack()
+    Label(l, text="Ce n'est pas forcement le chemin le plus cours car il n'y a pas de gestion du temps de parcours").pack()
+    Label(l, text="----------------------------------------------------------------------------------------------------------------------------").pack()
+    Label(l, text="Pour relancer un calcul d'itinéraire veuillez relancer l'application", bg= "red", fg= "white").pack()
+
 
 if __name__ == '__main__':
+
     # liste ajacence graphe
     Gare = {}
     Gare['Gare de Vaise'] = {'Valmy': 1}
@@ -71,21 +126,32 @@ if __name__ == '__main__':
     Gare['Masséna'] = {'Foch': 1, "Charpennes": 1}
     Gare['Charpennes'] = {'Masséna': 1, "Saxe Gambetta": 1}
 
-    depart = 'Gare de Vaise'
-    arriver = 'Charpennes'
+    fenetre = Tk()
+    fenetre.title("Application Transport")
 
-    #Calcul du trajet avec l'algo de dijkstra
-    print("Itinéraire calculé avec l'algo de Dijkstra : ")
-    trajet, tempsTrajet = dijkstra(Gare, depart, arriver)
-    print(trajet)
-    print("Temps du trajet :", tempsTrajet, "minutes \n")
+    # Création de la liste avec nom gare pour le combobox
+    liste_combobox = ["Gare de Vaise", "Valmy", "Gorge de Loup", "Vieux-Lyon", "Bellecour", "Guillotière", "Saxe Gambetta", "Cuire", "Hénon", "Croix-Rousse", "Croix-Paquet", "Hôtel de Ville", "Cordeliers", "Ampère", "Perrache", "Foch", "Masséna", "Charpennes"]
 
-    #Calcul du trajet avec l'algo de parcours en profondeur
-    print("Itinéraire calculé avec l'algo de parcours en profondeur : ")
-    trajet = parcours_profondeur(Gare, depart, arriver)
-    for i in trajet:
-        print(i)
-    #for i in range(len(trajet)):
-        #print(trajet[i])
+    lDep = LabelFrame(fenetre, text="Point de départ", padx=20, pady=20)
+    lDep.pack(fill="both", expand="yes")
+
+    listeDepart = ttk.Combobox(lDep, values=liste_combobox)
+    listeDepart.pack()
+    listeDepart.current(0)
+
+    lArv = LabelFrame(fenetre, text="Point d'arrivée", padx=20, pady=20)
+    lArv.pack(fill="both", expand="yes")
+
+    listearrivee = ttk.Combobox(lArv, values=liste_combobox)
+    listearrivee.pack()
+    listearrivee.current(4)
+
+    l = LabelFrame(fenetre, text="Bouton de calcul de l'itinéraire", padx=20, pady=20)
+    l.pack(fill="both", expand="yes")
+
+    bouton = Button(l, text="Calculer", command=lambda: [calculer_itinéraire(Gare), l.destroy(), lDep.pack_forget(), lArv.pack_forget()])
+    bouton.pack()
 
 
+
+    fenetre.mainloop()
