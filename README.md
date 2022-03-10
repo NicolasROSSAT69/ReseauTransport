@@ -10,6 +10,7 @@ Vous comparerez les résultats en temps de transport prévu pour l’utilisateur
 
 La documentation du projet est dans le fichier documentation.pdf
 Vous y trouverez le plan du réseau de transport utilisé ainsi que la matrice d'adjacence.
+Les algos calculent un itinéraire à partir d'une liste d'adjacence (dict en python)
 
 ## Version 
 Python 3.9
