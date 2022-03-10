@@ -13,5 +13,11 @@ Vous y trouverez le plan du réseau de transport utilisé ainsi que la matrice d
 
 ## Version 
 Python 3.9
-PyCharm
+PyCharm (JetBrains)
 Tkinter
+
+## Conclusion
+L'algo de dijkstra est un peu plus long à executer que l'algo de parcours en profondeur mais il est plus précis car il prend en compte la durée de trajet entre les diférentes gare de métro (Branch, node).
+Et ressort le trajet le plus court pour aller du point A au point B.
+L'algo de parcours en profondeur ressort quand à lui les différents itinéraires possibles pour se rendre entre le point A et B, sans prendre en compte le temps de transport.
+Comme dans mon exemple la matrice d'adjacence à uniquement des valeur 0 et 1, le temps pour aller de gare en gare est de 1 minutes mais d'autres valeurs aurait pu s'y trouver.
