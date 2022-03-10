@@ -152,6 +152,4 @@ if __name__ == '__main__':
     bouton = Button(l, text="Calculer", command=lambda: [calculer_itinéraire(Gare), l.destroy(), lDep.pack_forget(), lArv.pack_forget()])
     bouton.pack()
 
-
-
     fenetre.mainloop()
